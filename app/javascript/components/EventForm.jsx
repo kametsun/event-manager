@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import Pikaday from 'pikaday'
+import "pikaday/css/pikaday.css";
 
-import { isEmptyObject, validateEvent } from '../helpers/helpers';
+import { isEmptyObject, validateEvent, formatDate } from '../helpers/helpers';
 
 const EventForm = () => {
     const [event, setEvent] = useState({
@@ -13,6 +15,12 @@ const EventForm = () => {
       });
 
     const [formErrors, setFormErrors] = useState({});
+
+    const dateInput = useRef(null);
+
+    const updateEvent = (key, value) => {
+        setEvent((prevEvent) => ({ ...prevEvent, [key]: value }));
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -30,7 +38,7 @@ const EventForm = () => {
         const { name } = target;
         const value = target.type === "checkbox" ? target.checked : target.value;
 
-        setEvent({ ...event, [name]: value });
+        updateEvent(name, value);
     }
 
     const renderErrors = () => {
@@ -49,6 +57,21 @@ const EventForm = () => {
             </div>
             );
     }
+
+    useEffect(() => {
+        const p = new Pikaday({
+            field: dateInput.current,
+            onSelect: (date) => {
+                const formattedDate = formatDate(date);
+                dateInput.current.value = formattedDate;
+                PaymentRequestUpdateEvent("event_date", formattedDate);
+            }
+        });
+
+        //クリーンアップ用の関数を返す
+        //Reactはアンマウントの前にこれを呼び出す
+        return () => p.destroy();
+    }, []);
 
     return (
         <section>
@@ -74,7 +97,8 @@ const EventForm = () => {
                 type="text"
                 id="event_date"
                 name="event_date"
-                onChange={handleInputChange}
+                ref={dateInput}
+                autoComplete='off'
                 />
             </label>
             </div>

@@ -3,8 +3,9 @@ import Pikaday from 'pikaday'
 import "pikaday/css/pikaday.css";
 
 import { isEmptyObject, validateEvent, formatDate } from '../helpers/helpers';
+import propTypes from 'prop-types';
 
-const EventForm = () => {
+const EventForm = ({ onSave }) => {
     const [event, setEvent] = useState({
         event_type: '',
         event_date: '',
@@ -30,6 +31,7 @@ const EventForm = () => {
           setFormErrors(errors);
         } else {
           console.log(event);
+          onSave(event);
         }
       };
 
@@ -64,7 +66,7 @@ const EventForm = () => {
             onSelect: (date) => {
                 const formattedDate = formatDate(date);
                 dateInput.current.value = formattedDate;
-                PaymentRequestUpdateEvent("event_date", formattedDate);
+                updateEvent("event_date", formattedDate);
             }
         });
 
@@ -156,3 +158,7 @@ const EventForm = () => {
 }
 
 export default EventForm;
+
+EventForm.propTypes = {
+    onSave: propTypes.func.isRequired,
+};

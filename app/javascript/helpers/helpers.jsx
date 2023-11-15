@@ -1,3 +1,5 @@
+import { error } from './notifications';
+
 //バリデーション
 export const isEmptyObject = obj => Object.keys(obj).length === 0;
 
@@ -35,3 +37,8 @@ export const formatDate = (d) => {
   
     return `${YYYY}-${MM}-${DD}`;
   };
+
+export const handleAjaxError = (err) => {
+  error("エラーが発生しました。");
+  console.error(err);
+}

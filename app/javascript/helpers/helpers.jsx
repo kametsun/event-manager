@@ -3,6 +3,8 @@ import { error } from './notifications';
 //バリデーション
 export const isEmptyObject = obj => Object.keys(obj).length === 0;
 
+const isValiDate = dateObj => !Number.isNaN(Date.parse(dateObj));
+
 export const validateEvent = (event) => {
   const errors = {};
 
@@ -24,6 +26,10 @@ export const validateEvent = (event) => {
 
   if (event.host === '') {
     errors.host = '少なくとも1つのホストを入力する必要があります。';
+  }
+
+  if (!isValiDate(event.event_date)) {
+    errors.event_date = "日付を入力してください。";
   }
 
   return errors;

@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Pikaday from 'pikaday'
 import "pikaday/css/pikaday.css";
 
@@ -96,9 +96,12 @@ const EventForm = ({ events, onSave }) => {
         setEvent(initialEventState);
     }, [events, initialEventState]);
 
+    const cancelURL = event.id ? `/events/${event.id}` : '/events';
+    const title = event.id ? `${event.event_date} - ${event.event_type}` : '新規イベント';
+
     return (
         <div>
-            <h2>New Event</h2>
+            <h2>{ title }</h2>
             {renderErrors()}
 
             <form className="eventForm" onSubmit={handleSubmit}>
@@ -178,7 +181,8 @@ const EventForm = ({ events, onSave }) => {
                     </label>
                 </div>
                 <div className="form-actions">
-                <button type="submit">保存</button>
+                    <button type="submit">保存</button>
+                    <Link to={cancelURL}>キャンセル</Link>
                 </div>
             </form>
         </div>

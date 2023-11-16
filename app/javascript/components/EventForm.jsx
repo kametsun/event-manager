@@ -5,6 +5,7 @@ import "pikaday/css/pikaday.css";
 
 import { isEmptyObject, validateEvent, formatDate } from '../helpers/helpers';
 import PropTypes from 'prop-types';
+import EventNotFound from './EventNotFound';
 
 const EventForm = ({ events, onSave }) => {
     const { id } = useParams();
@@ -98,6 +99,10 @@ const EventForm = ({ events, onSave }) => {
 
     const cancelURL = event.id ? `/events/${event.id}` : '/events';
     const title = event.id ? `${event.event_date} - ${event.event_type}` : '新規イベント';
+
+    if (id && !event.id) {
+        return <EventNotFound />;
+    }
 
     return (
         <div>
